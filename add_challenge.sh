@@ -36,7 +36,7 @@ challenge_file="$challenge_folder_path/index.js"
 
 touch "$challenge_file"
 
-echo "const $challenge_name = () => {
+echo "function $challenge_name() {
   // Your code goes here
 }
 
@@ -44,7 +44,7 @@ module.exports = $challenge_name;" >"$challenge_file"
 
 # Create test file
 touch "$challenge_folder_path/$challenge_name.test.js"
-echo "const $challenge_name = require(\"index.js\");
+echo "const $challenge_name = require(\"./index.js\");
 describe(\"$challenge_name\", () => {
   test(\"$challenge_name is a function\", () => {
     expect(typeof $challenge_name).toEqual(\"function\");

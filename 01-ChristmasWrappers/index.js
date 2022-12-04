@@ -1,4 +1,4 @@
-function wrapping(gifts = []) {
+function wrappingGifts(gifts = []) {
   const wrapperSymbol = "*";
 
   return gifts.map((gift) => {
@@ -11,4 +11,4 @@ function wrapping(gifts = []) {
   });
 }
 
-module.exports = wrapping;
+module.exports = wrappingGifts;
