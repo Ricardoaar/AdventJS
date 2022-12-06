@@ -1,34 +1,39 @@
 function fitsInOneBox(boxes) {
+  const newBoxes = [];
 
-  const foundBiggestIndex = boxes.findIndex((box, idx) => {
-    return boxes.every((anotherBox, anotherIdx) => {
-      return Object.keys(anotherBox).every((key) => {
-        const isTheSameBox = idx === anotherIdx;
-        return box[key] > anotherBox[key] || isTheSameBox;
+  const operationsByValues = {
+    "equal": (a, b) => a !== b,
+    "lower": (a, b) => a < b,
+    "higher": (a, b) => a > b
+  };
+
+  return boxes.every((box) => {
+    const isValid = newBoxes.every((newBox) => {
+      let operation = "equal";
+      return Object.keys(newBox).every((key, keyIdx) => {
+        const newBoxValue = newBox[key];
+        const boxValue = box[key];
+
+        const isKeyValid = operationsByValues[operation](newBoxValue, boxValue);
+
+        if (!isKeyValid) return false;
+
+        if (keyIdx === 0) {
+          operation = newBoxValue > boxValue ? "higher" : "lower";
+        }
+        return true;
       });
+
     });
+
+    if (isValid) newBoxes.push(box);
+    return isValid;
   });
-
-
-  if (foundBiggestIndex === -1) return false;
-  let biggestBox = boxes[foundBiggestIndex];
-  let restBoxes = [...boxes.slice(0, foundBiggestIndex), ...boxes.slice(foundBiggestIndex + 1)];
-
-  while (restBoxes.length > 0) {
-    const biggestIndex = restBoxes.findIndex((box, idx) => {
-      return restBoxes.every((otherBox, otherIdx) => {
-        return Object.keys(box).every(key => {
-          const isTheSameBox = idx === otherIdx;
-          const isHigherThanOther = box[key] > otherBox[key];
-          const isLowerThanBiggest = box[key] < biggestBox[key];
-          return (isHigherThanOther && isLowerThanBiggest) || isTheSameBox;
-        });
-      });
-    });
-    if (biggestIndex === -1) return false;
-    biggestBox = restBoxes[biggestIndex];
-
-    restBoxes = [...restBoxes.slice(0, biggestIndex), ...restBoxes.slice(biggestIndex + 1)];
-  }
-  return true;
 }
+
+console.log(fitsInOneBox([{ l: 1, w: 1, h: 1 },
+  { l: 3, w: 3, h: 12 },
+  { l: 2, w: 2, h: 2 }])
+);
+
+
